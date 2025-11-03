@@ -110,6 +110,10 @@ Invoke-RestMethod -Uri "http://localhost:8080/chat" `
 }
 ```
 
-# Para o fluxo completo, consulte o arquivo `FLOW.md` disponível nesse repositório.
+# Observação quanto ao fluxo completo:
+
+Para o fluxo completo, consulte o arquivo `FLOW.md` disponível nesse repositório.
+
+# Frontend meramente demonstrativo
 
 Um frontend genérico foi montando via LLM somente para demonstração. Para acessá-lo, utilize a pasta web -> `npm install` -> `npm run dev`
