@@ -1,4 +1,4 @@
-```mermaid
+```
 flowchart TD
 %% STYLES (no topo)
 classDef handler fill:#2f4f4f,stroke:#111,color:#fff
@@ -52,4 +52,5 @@ AB -->|OK| AD[AddMessage na memoria local]:::memory
 AD --> AE[Montar JSON final com response e sources]:::handler
 AE --> AF[Retornar resposta HTTP 200 OK]:::handler
 AF --> AG[Fim do fluxo]:::terminal
+
 ```
