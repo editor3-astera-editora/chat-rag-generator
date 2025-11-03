@@ -19,6 +19,13 @@ internal/
  └── model/                     → Estruturas de dados (Message, Formula)
 ```
 
+Visão geral do fluxo do projeto:
+
+```
+HTTP → handler → service → (llm + repository + memory) → handler → HTTP
+                   └─ middleware de apoio (CORS, logging, checagens)
+```
+
 ## Inicialização:
 
 1. Variáveis de ambiente
@@ -64,6 +71,15 @@ Entrada esperada (JSON):
   "user_id": "user123",
   "message": "Como calcular o montante em juros compostos?"
 }
+```
+
+Teste com:
+
+```
+Invoke-RestMethod -Uri "http://localhost:8080/chat" `
+>>   -Method Post `
+>>   -Body '{"user_id":"user123","message":"Como calcular juros compostos?"}' `
+>>   -ContentType "application/json"
 ```
 
 ## Processo interno:
