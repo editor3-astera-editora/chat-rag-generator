@@ -6,17 +6,17 @@ Ele permite que o chatbot recupere informações dos livros didáticos, gere res
 ## Estrutura do projeto 
 
 ```
-cmd/main.go                     → Ponto de entrada do servidor HTTP
+cmd/main.go                              → Ponto de entrada do servidor HTTP
 internal/
- ├── handler/chat_handler.go    → Controla requisições HTTP (camada de interface)
- ├── service/chat_service.go    → Orquestra o fluxo de inferência e memória
- ├── repository/chat_repository.go → Acesso a embeddings (pgVector)
- ├── repository/formula_repository.go → Acesso ao mapa de fórmulas
- ├── llm/embedding.go           → Geração de embeddings com OpenAI
- ├── llm/openai_client.go       → Chamada de completions (GPT-4o)
- ├── memory/local_memory.go     → Armazena o histórico de conversa (por usuário)
- ├── middleware/                → Middlewares de logging, CORS e checagens semânticas
- └── model/                     → Estruturas de dados (Message, Formula)
+ ├── handler/chat_handler.go             → Controla requisições HTTP (camada de interface)
+ ├── service/chat_service.go             → Orquestra o fluxo de inferência e memória
+ ├── repository/chat_repository.go       → Acesso a embeddings (pgVector)
+ ├── repository/formula_repository.go    → Acesso ao mapa de fórmulas
+ ├── llm/embedding.go                    → Geração de embeddings com OpenAI
+ ├── llm/openai_client.go                → Chamada de completions (GPT-4o)
+ ├── memory/local_memory.go              → Armazena o histórico de conversa (por usuário)
+ ├── middleware/                         → Middlewares de logging, CORS e checagens semânticas
+ └── model/                              → Estruturas de dados (Message, Formula)
 ```
 
 Visão geral do fluxo do projeto:
