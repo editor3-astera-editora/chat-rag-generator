@@ -112,7 +112,7 @@ Invoke-RestMethod -Uri "http://localhost:8080/chat" `
 
 # Observação quanto ao fluxo completo:
 
-Para o fluxo completo, consulte o arquivo `FLOW.md` disponível nesse repositório.
+Para o fluxo completo, consulte o arquivo `FLOW.md` disponível nesse repositório ou no arquivo `fluxograma.xcalidraw`, que pode ser aberto em: `https://excalidraw.com/`
 
 # Frontend meramente demonstrativo
 
