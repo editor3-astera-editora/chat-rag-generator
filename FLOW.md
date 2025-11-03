@@ -1,5 +1,4 @@
 ```mermaid
-
 flowchart TD
 
 A[POST /chat recebido]:::handler --> B{AuthMiddleware: usuario autorizado?}:::middleware
@@ -50,9 +49,7 @@ AD --> AE[Montar JSON final com response e sources]:::handler
 AE --> AF[Retornar resposta HTTP 200 OK]:::handler
 AF --> AG[Fim do fluxo]:::end
 
-
 %% STYLES
-
 classDef handler fill:#2f4f4f,stroke:#111,color:#fff
 classDef service fill:#1f77b4,stroke:#111,color:#fff
 classDef repository fill:#9467bd,stroke:#111,color:#fff
@@ -60,5 +57,4 @@ classDef middleware fill:#ff7f0e,stroke:#111,color:#fff
 classDef llm fill:#2ca02c,stroke:#111,color:#fff
 classDef memory fill:#8c564b,stroke:#111,color:#fff
 classDef end fill:#333,stroke:#000,color:#fff
-
 ```
