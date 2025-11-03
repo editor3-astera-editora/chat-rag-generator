@@ -1,4 +1,5 @@
 ```mermaid
+
 flowchart TD
 
 A[POST /chat recebido]:::handler --> B{AuthMiddleware: usuario autorizado?}:::middleware
@@ -12,6 +13,7 @@ J -->|Nao| K[400 Bad Request - Erro JSON]:::handler
 J -->|Sim| L[Handler chama ChatService ProcessMessage]:::handler
 
 %% SERVICE LAYER
+
 L --> M{Usuario possui livro associado?}:::service
 M -->|Nao| N[404 Livro nao mapeado]:::service
 M -->|Sim| O{Pergunta contem capitulo X?}:::service
@@ -23,12 +25,14 @@ R -->|Erro| S[500 Erro ao gerar embedding]:::llm
 R -->|OK| T[Repository SearchSimilarEmbeddings]:::repository
 
 %% REPOSITORY
+
 T -->|Nenhum resultado| U[Sem contexto relevante -> resposta pedagogica generica]:::service
 T -->|Com resultados| V{Maior similaridade >= 0.75?}:::service
 V -->|Nao| U
 V -->|Sim| W[Construir contexto textual com docs recuperados]:::service
 
 %% FORMULA LOOKUP
+
 W --> X{Pergunta sugere formula?}:::middleware
 X -->|Nao| Y[Sem formulas adicionadas]:::service
 X -->|Sim| Z[Repository SearchFormula no formulas_map]:::repository
@@ -38,6 +42,7 @@ Z1 --> AA[Montar prompt final com historico e pergunta]:::service
 Y --> AA
 
 %% LLM GENERATION
+
 AA --> AB[LLM GetLLMResponse GPT-4o]:::llm
 AB -->|Erro| AC[500 Erro ao chamar LLM]:::llm
 AB -->|OK| AD[AddMessage na memoria local]:::memory
@@ -55,4 +60,5 @@ classDef middleware fill:#ff7f0e,stroke:#111,color:#fff
 classDef llm fill:#2ca02c,stroke:#111,color:#fff
 classDef memory fill:#8c564b,stroke:#111,color:#fff
 classDef end fill:#333,stroke:#000,color:#fff
+
 ```
