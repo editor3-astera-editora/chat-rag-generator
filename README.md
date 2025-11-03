@@ -1,3 +1,4 @@
+# Como iniciar o projeto
 
 Esse projeto implementa o MVP de um backend de um professor virtual que utiliza um pipeline RAG (retrieval-augmented generation) conectado ao banco vetorial pgVector, alimentado pelo pipeline `https://github.com/editor3-astera-editora/rag-pgvector`.
 Ele permite que o chatbot recupere informações dos livros didáticos, gere respostas contextuais e explique fórmulas matemáticas de forma pegagógica.
