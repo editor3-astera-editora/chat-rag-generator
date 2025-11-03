@@ -1,117 +1,94 @@
-`/cmd/main.go`
 
-- Função: ponto de entrada da aplicação.
-- Responsabilidades:
-    - Inicializa a conexão com  o banco de dados (config.GetDB())
-    - Cria instâncias do repositório, serviço e handler.
-    - Configura o roteamento HTTP (/chat)
-    - Aplica o middleware de logging
-    - Inicia o servidor local em `http://localhost:8080`
+Esse projeto implementa o MVP de um backend de um professor virtual que utiliza um pipeline RAG (retrieval-augmented generation) conectado ao banco vetorial pgVector, alimentado pelo pipeline `https://github.com/editor3-astera-editora/rag-pgvector`.
+Ele permite que o chatbot recupere informações dos livros didáticos, gere respostas contextuais e explique fórmulas matemáticas de forma pegagógica.
 
-`/internal/handler/chat_handler.go`
-
-- Função: Controlador HTTP responsável por receber e responder às requisições REST do chat.
-- Responsabilidades:
-    - Recebe mensagens do usuário via `POST /chat`.
-    - Decodifica o corpo JSON (`user_id`, `message`)
-    - Encaminha para o `ChatService`
-    - Retorna a resposta do modelo como JSON
-
-Exemplo de entrada:
+## Estrutura do projeto 
 
 ```
-{
-    "user_id": "user123".
-    "message": "Explique a leia de Ohm."
-}
+cmd/main.go                     → Ponto de entrada do servidor HTTP
+internal/
+ ├── handler/chat_handler.go    → Controla requisições HTTP (camada de interface)
+ ├── service/chat_service.go    → Orquestra o fluxo de inferência e memória
+ ├── repository/chat_repository.go → Acesso a embeddings (pgVector)
+ ├── repository/formula_repository.go → Acesso ao mapa de fórmulas
+ ├── llm/embedding.go           → Geração de embeddings com OpenAI
+ ├── llm/openai_client.go       → Chamada de completions (GPT-4o)
+ ├── memory/local_memory.go     → Armazena o histórico de conversa (por usuário)
+ ├── middleware/                → Middlewares de logging, CORS e checagens semânticas
+ └── model/                     → Estruturas de dados (Message, Formula)
 ```
+
+## Inicialização:
+
+1. Variáveis de ambiente
+
+Crie um arquivo `.env`com:
+
+```
+OPENAI_API_KEY="s..."
+PGVECTOR_DB_URI=postgresql+psycopg://postgres:SUASENHA@localhost:5432/embeddings_db
+PSYCOPG_DB_URI=postgresql://postgres:SUASENHA@localhost:5432/embeddings_db
+````
+
+O banco `embeddings_db` deve ter sido criado com o schema do projeto `https://github.com/editor3-astera-editora/rag-pgvector`
+
+2. Pré-requisitos
+
+É necessário ter instalado na máquina Golang - 1.23.3 (mínimo). O download pode ser realizado em: `https://go.dev/doc/install`
+
+3. Execute `go mod tidy` para instalar as bibliotecas necessárias.
+
+4. Execute `go run ./cmd`:
 
 Saída esperada:
 
 ```
+ Conexão PostgreSQL (pgxpool) bem-sucedida
+2025/11/03 17:25:32  Banco conectado: embeddings_db | Usuário: postgres | Versão: 16.10
+2025/11/03 17:25:32  search_path: "$user", public
+2025/11/03 17:25:32 Servidor inicado em http://localhost:8080
+```
+
+## API 
+
+Rota principal:
+
+```
+POST /chat
+```
+Entrada esperada (JSON):
+
+```
 {
-    "response": "A lei de Ohm afirma que V = R x I."
+  "user_id": "user123",
+  "message": "Como calcular o montante em juros compostos?"
 }
 ```
 
-`/internal/llm/embedding.go`
+## Processo interno:
 
-- Função: Gera embeddings vetoriais das mensagens.
-- Responsabilidades: 
-    - Utiliza o endpoint de embeddings da API OpenAI (`text-embedding-3-large`).
-    - Converte o vetor retornado (float64) para []float32 para compatibilidade com o PostGreSQL (pgVector)
-    - Serve de base para a busca vetorial no banco
+1. O `ChatHandler` decodifica o JSON recebido;
+2. O `ChatService` gera o embedding da pergunta (`text-embedding-3-large`);
+3. O `ChatRepository` busca no banco pgvector os 3 chunks mais similares;
+4. Se a similaridade média for menor que 0.75, o sistema responde com uma mensagem de redirecionamento pedagógico;
+5. Caso contrário:
+       - monta o **contexto textual** a partir dos trechos recuperados;
+       - busca **fórmulas associadas** ao capítulo (`FormulaService` + `formulas_map`);
+       - adiciona memória conversacional (`local_memory.go`);
+       - envia tudo ao modelo `gpt-4o` para gerar a resposta final.
 
-`/internal/llm/openai_client.go`
-
-- Função: faz chamadas ao modelo de linguagem da OpenAI
-- Responsabilidades:
-    - utiliza o modelo gpt-4o para gerar respostas com base no contexto.
-    - Define o prompt do sistema como um "professor que explica conceitos de livros didáticos."
-    - Recebe o conteúdo completo (mensagem + contexto + histórico) e retorna a resposta textual
-
-`/internal/memory/local_memory.go`
-
-- Função: implementa a memória local por usuário.
-- Responsabildiades:
-    - Armazena mensagens em um map[UserID][]Message
-    - Mantém apenas as últimas 10 mensagens (MaxMessages)
-    - Permite recuperar ou limpar o histórico do usuário
-
-Limite configurado: MaxMessages = 10
-
-`/internal/middleware/logging.go`
-
-- Função: middleware para logar requisições HTTP
-- Responsabilidades:
-    - Registra o método, rota e tempo de execução de cada requisição.
-    - Auxilia no monitoramento e debugging do servidor
-
-Saída típica: 
-    POST /chat
-    POST /chat em 132ms
-
-`/internal/model/mesage.go`
-
-- Função: define a estrutura das mensagens trocadas entre usuário e assistente.
-- Campos:
-    - Role: "user" ou "assistant"
-    - Content: texto da mensagem 
-
-`/internal/repository/chat_repository.go`
-
-- Função: interage com o banco de dados vetorial (pgVector)
-- Responsabilidades:
-    - Executa busca semântica no banco usando similaridade vetorial (<->)
-    - Retorna os documentos mais próximos do embedding da pergunta.
-    - Limita o número de resultados relevantes (LIMIT configurável)
-- Consulta SQL:
-
+## Saída (JSON):
 ```
-SELECT document
-FROM langchain_pg_embedding
-ORDER BY embedding <-> $1
-LIMIT $2
+{
+  "response": "Para calcular o montante em juros compostos, usamos a fórmula M = C × (1 + i)^t. Esse conceito está explicado no capítulo 3 da Unidade 2.",
+  "sources": [
+    {
+      "Document": "O montante é o valor final de uma aplicação financeira...",
+      "BookName": "Matemática Financeira",
+      "Unit": 2,
+      "Chapter": 3,
+      "Similarity": 0.89
+    }
+  ]
+}
 ```
-
-`/internal/service/chat_service.go`
-- Função: Camada de orquestração principal do chat
-- Fluxo interno:
-    1. Armazena a nova mensagem do usuário na memória
-    2. Gera embedding do conteúdo via  `llm.GenerateEmbedding`
-    3. Busca documentos similares no banco via `ChatRepository`
-    4. Constrói um contexto concatenando resultados relevantes e histórico.
-    5. Chama `llm.GetLLMResponse()` com o contexto completo.
-    6. Armazena a respost ado modelo na memória.
-    7. Retorna a resposta final
-
-
-    A[Usuário envia mensagem] --> B[Handler (/chat)]
-    B --> C[ChatService]
-    C --> D[GenerateEmbedding]
-    D --> E[pgvector via ChatRepository]
-    E --> F[Busca contexto relevante]
-    F --> G[Compõe histórico + contexto]
-    G --> H[GetLLMResponse (GPT-4o)]
-    H --> I[Memória atualizada (últimas 10 msgs)]
-    I --> J[Resposta enviada ao usuário]
