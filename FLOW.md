@@ -1,5 +1,4 @@
 ```mermaid
-```mermaid
 flowchart TD
 
 A[POST /chat recebido]:::handler --> B{AuthMiddleware: usuario autorizado?}:::middleware
