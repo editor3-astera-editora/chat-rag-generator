@@ -1,4 +1,4 @@
-```
+```mermaid
 flowchart TD
 %% STYLES (no topo)
 classDef handler fill:#2f4f4f,stroke:#111,color:#fff
