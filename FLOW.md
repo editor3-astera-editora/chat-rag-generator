@@ -52,5 +52,4 @@ AB -->|OK| AD[AddMessage na memoria local]:::memory
 AD --> AE[Montar JSON final com response e sources]:::handler
 AE --> AF[Retornar resposta HTTP 200 OK]:::handler
 AF --> AG[Fim do fluxo]:::terminal
-
 ```
