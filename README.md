@@ -109,3 +109,26 @@ Invoke-RestMethod -Uri "http://localhost:8080/chat" `
   ]
 }
 ```
+
+
+flowchart TD
+A[POST /chat recebido] --> B{Usuário autorizado?}
+B -->|Não| E[403 Forbidden]
+B -->|Sim| F{Método POST?}
+F -->|Não| G[405 Method Not Allowed]
+F -->|Sim| H{JSON válido?}
+H -->|Não| I[400 Bad Request]
+H -->|Sim| J{Livro associado?}
+J -->|Não| K[404 Livro não encontrado]
+J -->|Sim| L[Gerar embedding]
+L -->|Erro| M[500 Erro embedding]
+L -->|OK| N{Resultados semelhantes?}
+N -->|Não| O[Resposta pedagógica genérica]
+N -->|Sim| P{Similaridade >= 0.75?}
+P -->|Não| O
+P -->|Sim| Q[Busca fórmulas + monta contexto]
+Q --> R[Chama GPT-4o]
+R -->|Erro| S[500 Erro LLM]
+R -->|OK| T[Retorna JSON {response, sources}]
+T --> U[Fim]
+
