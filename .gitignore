@@ -1,0 +1,7 @@
+/web/.vscode 
+/web/node_modules
+/web/package_lock.json
+/web/package.json
+/web/postcss.config.js
+
+.env

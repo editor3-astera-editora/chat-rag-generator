@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estrutura base */
+body {
+  @apply bg-white text-gray-800 flex flex-col h-screen font-sans;
+}
+
+header {
+  @apply bg-gray-100 p-4 text-center text-xl font-semibold border-b border-gray-200;
+}
+
+#chat-box {
+  @apply flex-1 overflow-y-auto p-4 space-y-3;
+}
+
+/* Formulário */
+#chat-form {
+  @apply flex p-4 bg-gray-50 border-t border-gray-200;
+}
+
+#message-input {
+  @apply flex-1 p-2 rounded-lg bg-gray-100 text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400;
+}
+
+button[type="submit"] {
+  @apply ml-3 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg text-white font-medium transition;
+}
+
+/* Mensagens */
+.message-container.user {
+  @apply text-right;
+}
+
+.message-container.assistant {
+  @apply text-left;
+}
+
+.message-container.source {
+  @apply text-left text-sm text-gray-500 ml-2;
+}
+
+/* Balões */
+.user-message {
+  @apply inline-block px-4 py-2 rounded-2xl max-w-[80%] bg-gray-100 text-gray-800 border border-gray-200 rounded-br-none;
+}
+
+.assistant-message {
+  @apply inline-block px-4 py-2 rounded-2xl max-w-[80%] bg-blue-100 text-gray-800 border border-blue-200 rounded-bl-none;
+}
+
+.assistant-message h2 {
+  @apply text-xl font-bold text-gray-800 mt-3 mb-2;
+}
+
+.assistant-message h3 {
+  @apply text-lg font-semibold text-gray-700 mt-2 mb-1;
+}
+
+.assistant-message strong {
+  @apply font-bold text-gray-900;
+}
+
+.assistant-message p {
+  @apply mb-2;
+}
+
+.source-message {
+  @apply px-3 py-1 rounded-lg bg-gray-50 border border-gray-200 inline-block max-w-[90%];
+}
+
+.assistant-message mjx-container[jax="SVG"][display="true"] {
+  display: block !important;
+  text-align: center !important;
+  margin: 0.5rem auto 0.5rem !important; /* ↓ reduz o "espaço enorme" */
+}
+
+.assistant-message mjx-container[jax="SVG"]:not([display="true"]) {
+  display: inline-block !important;
+  vertical-align: -0.15em;
+  margin: 0 0.2em; /* pequeno respiro */
+}
+
+.assistant-message mjx-container svg {
+  max-width: 100%;
+  height: auto;
+}
+

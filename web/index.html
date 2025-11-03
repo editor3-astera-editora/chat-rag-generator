@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat RAG MVP</title>
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Importa o CSS customizado -->
+  <link rel="stylesheet" href="output.css" />
+</head>
+<body>
+  <header>
+    Chat RAG — MVP
+  </header>
+
+  <!-- Área do chat -->
+  <main id="chat-box"></main>
+
+  <!-- Formulário -->
+  <form id="chat-form">
+    <input
+      id="message-input"
+      type="text"
+      placeholder="Digite sua pergunta..."
+      required
+    />
+    <button type="submit">Enviar</button>
+  </form>
+
+   <!-- MathJax v3: renderiza \( ... \) e \[ ... \] -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]],
+        processEscapes: true,
+        processEnvironments: true,
+        tags: "none",
+      },
+      svg: { fontCache: "global", displayAlign: "center", displayIndent: "0" },
+      options: {
+        skipHtmlTags: ["script","noscript","style","textarea","pre","code"]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+  </script>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>
