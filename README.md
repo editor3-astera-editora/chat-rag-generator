@@ -114,10 +114,11 @@ Invoke-RestMethod -Uri "http://localhost:8080/chat" `
 
 Para o fluxo completo, consulte o arquivo `FLOW.md` disponível nesse repositório ou no arquivo `fluxograma.xcalidraw`, que pode ser aberto em: `https://excalidraw.com/`
 
-# Observação quanto ao funcionamento da consulta vetorial
-
-Uma explicação melhor de como funciona a consulta vetorial está em `RAG.md` disponível nesse repositório.
-
 # Frontend meramente demonstrativo
 
 Um frontend genérico foi montando via LLM somente para demonstração. Para acessá-lo, utilize a pasta web -> `npm install` -> `npm run dev`
+
+# Melhorias futuras
+
+Melhorias futuras que são necessárias estão no arquivo `MELHORIAS_FUTURAS.md` disponível nesse repositório.
+
