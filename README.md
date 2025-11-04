@@ -117,8 +117,3 @@ Para o fluxo completo, consulte o arquivo `FLOW.md` disponível nesse repositór
 # Frontend meramente demonstrativo
 
 Um frontend genérico foi montando via LLM somente para demonstração. Para acessá-lo, utilize a pasta web -> `npm install` -> `npm run dev`
-
-# Melhorias futuras
-
-Melhorias futuras que são necessárias estão no arquivo `MELHORIAS_FUTURAS.md` disponível nesse repositório.
-
