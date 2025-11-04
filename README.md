@@ -77,9 +77,9 @@ Teste com:
 
 ```
 Invoke-RestMethod -Uri "http://localhost:8080/chat" `
->>   -Method Post `
->>   -Body '{"user_id":"user123","message":"Como calcular juros compostos?"}' `
->>   -ContentType "application/json"
+   -Method Post `
+   -Body '{"user_id":"user123","message":"Como calcular juros compostos?"}' `
+   -ContentType "application/json"
 ```
 
 ## Processo interno:
