@@ -114,6 +114,28 @@ Invoke-RestMethod -Uri "http://localhost:8080/chat" `
 
 Para o fluxo completo, consulte o arquivo `FLOW.md` disponível nesse repositório ou no arquivo `fluxograma.xcalidraw`, que pode ser aberto em: `https://excalidraw.com/`
 
+# Otimizações e previsões de custos
+
+Só para passar uma relação de custos rápida, precisamos lembrar que existem dois tipos de gastos envolvidos:
+
+1.	Vetorização dos livros:
+
+Para vetorizar um livro de atividades gastei 110 tokens. Como são +/- 500 livros de atividades, o custo para vetorizar seria de 55k de tokens. O custo do modelo usado (text-embedding-3-large) é de $0.13 para cada 1 milhão de tokens, ou seja, o custo é irrisório. 
+
+2.	Geração de respostas:
+
+Atualmente utilizo o modelo GPT-4o que tem o custo de $10 para cada 1 milhão de tokens de output. Para gerar um livro de 120 páginas, eu gasto $1, fazendo conta de padeiro, seria como se cada pergunta do aluno tivesse um custo de $0.02 por pergunta do aluno.
+
+Possíveis otimizações são:
+
+- Podemos utilizar modelos menos inteligentes e aplicar prompt engineering para manter a qualidade das respostas
+- É recomendável implementar um RateLimit para prevenir ataques de prompt injection e controlar o uso de recursos
+- Para reduzir custos adicionais com buscar no banco de dados, podemos introduzir um router que evita consultas desnecessárias ao banco quando o aluno enviar mensagens triviais como “ok, obrigado”, ou “quem é você?”, etc...
+- Talvez armazenar perguntas recorrentes para determinado livro com cache em Redis
+
+
+
+
 # Frontend meramente demonstrativo
 
 Um frontend genérico foi montando via LLM somente para demonstração. Para acessá-lo, utilize a pasta web -> `npm install` -> `npm run dev`
